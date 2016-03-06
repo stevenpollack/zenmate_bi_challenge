@@ -29,11 +29,11 @@ def set_agenda(meetings, room1, room2):
             found_solution=False
             break
     
-    return(found_solution)
+    return(found_solution, room1, room2)
 
-def organize_meetings(meetings_file='test_input.txt',
-                      max_meeting_time=7*60*2,
-                      max_attempts=100,
+def organize_meetings(meetings_file,
+                      max_meeting_time,
+                      max_attempts,
                       verbose=False):
 
     meetings = parse_input(meetings_file)
@@ -43,28 +43,31 @@ def organize_meetings(meetings_file='test_input.txt',
     for meeting in meetings:
         total_meeting_time += meeting.duration
 
-    if total_meeting_time / 60 > max_meeting_time:
-        raise Exception('more meeting time required than allowed')
-
     if verbose:
         print("Total meeting time: %i minutes\n" % total_meeting_time)
-        
+     
+    if total_meeting_time > max_meeting_time:
+        print('Error: more meeting time required than allowed...')
+        return(None)
+
     # initialize the two meeting rooms
     room1 = MeetingRoom("Room 1")
     room2 = MeetingRoom("Room 2")
 
     solution_found=False
     for attempt in range(max_attempts):
-        solution_found = set_agenda(meetings, room1, room2)
-        print(attempt, solution_found)
+        
+        solution_found, room1, room2 = set_agenda(meetings, room1, room2)
+
         if solution_found:
             break
         else:
-            print(room1)
-            print(room2)
+            # shuffle meetings and clear the meeting rooms' schedules
             reset_and_shuffle(meetings)
+            room1 = MeetingRoom("Room 1")
+            room2 = MeetingRoom("Room 2")
 
-    if solution_found:
+    if not solution_found:
         print("Couldn't find solution within %i attempts." % max_attempts)
         return(None)
     
@@ -78,6 +81,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("meeting_file", 
                         help="the path to the file containing meeting names and lengths.")
+    parser.add_argument("-t", "--max-meeting-time",
+                        type=int,
+                        default=60*7*2,
+                        help="the maximum number of minutes allowed for \
+                        meeting, across both meeting rooms. Default is 60*7*2, \
+                        which represents 14 hours across both rooms.")
     parser.add_argument("-m", "--max-attempts", 
                         default=100,
                         type=int,
@@ -89,4 +98,5 @@ if __name__ == "__main__":
 
     organize_meetings(meetings_file=args.meeting_file, 
                       max_attempts=args.max_attempts,
+                      max_meeting_time=args.max_meeting_time,
                       verbose=args.verbose)
