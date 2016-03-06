@@ -6,7 +6,7 @@ python organize_meetings.py /path/to/meetings.txt
 You can always run the `organize_meetings.py` with `-h` to see the various flags
 and arguments.
 
-***Note:*** the input to `organize_meetings.py` is assume to have the same
+***Note:*** the input to `organize_meetings.py` is assumed to have the same
 structure as the .txt provided in the coding challenge ([test_input.txt](test_input.txt)). 
 The output of the .py is a schedule, as depicted in the coding challenge. E.g.,
 ```bash
