@@ -1,8 +1,12 @@
+import re
+from meeting import Meeting
+from meetingroom import MeetingRoom
+from random import shuffle
+
 def parse_input(input_file='test_input.txt'):    
     meetings = []
     with open(input_file) as f:
         for line in f:
-            lines.append(line)
             line_split = re.match('(.*) (\d+)min', line)
             if line_split:
                 meetings.append(Meeting(line_split.group(1), line_split.group(2)))
@@ -27,7 +31,7 @@ def set_agenda(meetings, room1, room2):
     return(found_solution)
 
 def organize_meetings(meetings_file='test_input.txt',
-                      max_meeting_time=7*2,
+                      max_meeting_time=7*60*2,
                       max_attempts=100,
                       verbose=True):
 
@@ -42,7 +46,7 @@ def organize_meetings(meetings_file='test_input.txt',
         raise Exception('more meeting time required than allowed')
 
     if verbose:
-        print("Total meeting time: %i\n" % total_meeting_time)
+        print("Total meeting time: %i minutes\n" % total_meeting_time)
         
     # initialize the two meeting rooms
     room1 = MeetingRoom("Room 1")
@@ -64,3 +68,6 @@ def organize_meetings(meetings_file='test_input.txt',
         print(room2)
         
     return(room1, room2)
+
+if __name__ == "__main__":
+    organize_meetings()

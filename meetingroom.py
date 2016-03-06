@@ -1,3 +1,7 @@
+from meeting import Meeting
+from datetime import datetime, timedelta
+from copy import copy
+
 class MeetingRoom:
     
     def __init__(self, name):
